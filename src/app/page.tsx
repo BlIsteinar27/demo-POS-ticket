@@ -17,8 +17,9 @@ import {
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Catalogo } from "@/components/pos/catalogo";
-import { PAYMENT_METHODS, MOCK_TASA } from "@/lib/mock/mocks";
+import { PAYMENT_METHODS } from "@/lib/mock/mocks";
 import { createSale } from "./actions/sales";
+import { getLatestTasa } from "./actions/tasas";
 import { Resumen } from "@/components/pos/resumen";
 import { ModuloPago } from "@/components/pos/modulo-pago";
 import Link from "next/link";
@@ -39,6 +40,18 @@ export default function Home() {
   const [reference, setReference] = useState<string>("");
   const [isOnline, setIsOnline] = useState(true);
   const [pendingSales, setPendingSales] = useState(0);
+  const [currentTasa, setCurrentTasa] = useState<number>(280); // Tasa por defecto
+
+  // Cargar tasa vigente al iniciar
+  useEffect(() => {
+    const loadTasa = async () => {
+      const result = await getLatestTasa();
+      if (result.success && result.data) {
+        setCurrentTasa(result.data.tasa);
+      }
+    };
+    loadTasa();
+  }, []);
 
   // Detectar estado de conexión
   useEffect(() => {
@@ -89,7 +102,10 @@ export default function Home() {
     () => cart.reduce((acc, item) => acc + item.price_usd * item.quantity, 0),
     [cart],
   );
-  const totalVES = useMemo(() => totalUSD * MOCK_TASA, [totalUSD]);
+  const totalVES = useMemo(
+    () => totalUSD * currentTasa,
+    [totalUSD, currentTasa],
+  );
   // Manejo de teclado táctil
   const handleNumpadPress = (digit: string) => {
     if (reference.length < 4) {
@@ -113,7 +129,7 @@ export default function Home() {
     const payload: SalePayload = {
       total_usd: Number(totalUSD.toFixed(2)),
       total_ves: Number(totalVES.toFixed(2)),
-      tasa: MOCK_TASA,
+      tasa: currentTasa,
       tasa_day: new Date(),
       payment_method: paymentMethod,
       payment_reference: isPagoMovil ? reference : undefined,

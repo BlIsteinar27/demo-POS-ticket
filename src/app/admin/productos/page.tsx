@@ -7,8 +7,9 @@ import {
   deleteProduct,
   toggleProductActive,
 } from "@/app/actions/products";
+import { saveTasa, getLatestTasa } from "@/app/actions/tasas";
 import { Button } from "@/components/ui/button";
-import { Trash2, Edit, Plus, Power, PowerOff } from "lucide-react";
+import { Trash2, Edit, Plus, Power, PowerOff, DollarSign } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import sweetAlertHelper from "@/lib/sweet-alert-helper";
 
@@ -17,6 +18,9 @@ export default function ProductosPage() {
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [tasa, setTasa] = useState<string>("");
+  const [currentTasa, setCurrentTasa] = useState<number | null>(null);
+  const [savingTasa, setSavingTasa] = useState(false);
 
   const loadProducts = useCallback(async () => {
     setLoading(true);
@@ -27,9 +31,18 @@ export default function ProductosPage() {
     setLoading(false);
   }, []);
 
+  const loadCurrentTasa = useCallback(async () => {
+    const result = await getLatestTasa();
+    if (result.success && result.data) {
+      setCurrentTasa(result.data.tasa);
+      setTasa(result.data.tasa.toString());
+    }
+  }, []);
+
   useEffect(() => {
     loadProducts();
-  }, [loadProducts]);
+    loadCurrentTasa();
+  }, [loadProducts, loadCurrentTasa]);
 
   const handleDelete = async (id: string) => {
     const { isConfirmed } =
@@ -71,6 +84,25 @@ export default function ProductosPage() {
     loadProducts();
   };
 
+  const handleSaveTasa = async () => {
+    const tasaValue = parseFloat(tasa);
+    if (!tasaValue || tasaValue <= 0) {
+      sweetAlertHelper.error("Error", "La tasa debe ser un valor positivo");
+      return;
+    }
+
+    setSavingTasa(true);
+    const result = await saveTasa(tasaValue);
+    setSavingTasa(false);
+
+    if (result.success) {
+      sweetAlertHelper.toastSuccess("Tasa actualizada correctamente");
+      loadCurrentTasa();
+    } else {
+      sweetAlertHelper.error("Error", result.error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-screen">
@@ -87,6 +119,36 @@ export default function ProductosPage() {
           <Plus className="w-4 h-4 mr-2" />
           <span className="hidden sm:inline">Nuevo Producto</span>
         </Button>
+      </div>
+
+      {/* Configuración de Tasa */}
+      <div className="bg-white rounded-lg shadow p-4 mb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <div className="flex items-center gap-2">
+            <DollarSign className="w-5 h-5 text-gray-600" />
+            <span className="font-medium text-gray-700">Tasa del día:</span>
+            {currentTasa && (
+              <span className="text-lg font-bold text-green-600">
+                {currentTasa.toFixed(2)}
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <input
+              type="number"
+              step="0.01"
+              min="0"
+              max="10000"
+              placeholder="Nueva tasa"
+              value={tasa}
+              onChange={(e) => setTasa(e.target.value)}
+              className="border rounded-md px-3 py-2 w-full sm:w-32"
+            />
+            <Button onClick={handleSaveTasa} disabled={savingTasa} size="sm">
+              {savingTasa ? "Guardando..." : "Guardar"}
+            </Button>
+          </div>
+        </div>
       </div>
 
       <div className="bg-white rounded-lg shadow overflow-x-auto">

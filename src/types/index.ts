@@ -35,3 +35,9 @@ export interface SalePayload {
   payment_reference?: string;
   items: SaleItemPayload[];
 }
+
+export interface Tasa {
+  id: string;
+  tasa: number;
+  created_at: string;
+}
