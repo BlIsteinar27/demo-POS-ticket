@@ -12,6 +12,8 @@ export interface Product {
   price_usd: number;
   category: ProductCategory;
   is_active: boolean;
+  image_url?: string;
+  created_at: string;
 }
 
 export interface CartItem extends Product {
