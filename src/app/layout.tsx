@@ -16,7 +16,7 @@ const robotoMono = Roboto_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Menu",
+  title: "Ticket Food Fast",
   description: "Sistema de gestión de menú",
 };
 
