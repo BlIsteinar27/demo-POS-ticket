@@ -44,10 +44,18 @@ CREATE TABLE IF NOT EXISTS public.sale_items (
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+-- 5.5. Tabla: TASAS (Historial de tasas de cambio USD->VES)
+CREATE TABLE IF NOT EXISTS public.tasas (
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    tasa NUMERIC(10, 2) NOT NULL CHECK (tasa > 0),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- 6. Índices para acelerar el reporte de cierre de caja por rango de fechas
 CREATE INDEX IF NOT EXISTS idx_sales_created_at ON public.sales(created_at);
 CREATE INDEX IF NOT EXISTS idx_sales_payment_method ON public.sales(payment_method);
 CREATE INDEX IF NOT EXISTS idx_sale_items_sale_id ON public.sale_items(sale_id);
+CREATE INDEX IF NOT EXISTS idx_tasas_created_at ON public.tasas(created_at DESC);
 
 -- 7. Configuración de Políticas de Seguridad (RLS) - Todo público sin restricciones
 
@@ -84,6 +92,17 @@ TO anon, authenticated
 USING (true)
 WITH CHECK (true);
 
+-- Tasas
+ALTER TABLE public.tasas ENABLE ROW LEVEL SECURITY;
+REVOKE ALL ON TABLE public.tasas FROM anon, authenticated;
+GRANT SELECT, INSERT ON TABLE public.tasas TO anon, authenticated;
+
+CREATE POLICY "Public access to tasas"
+ON public.tasas FOR ALL
+TO anon, authenticated
+USING (true)
+WITH CHECK (true);
+
 -- 8. Configuración de Storage para imágenes de productos
 INSERT INTO storage.buckets (id, name, public, file_size_limit)
 VALUES ('products', 'products', true, 52428800) -- 50MB en bytes
@@ -107,8 +126,13 @@ USING (bucket_id = 'products');
 
 -- 9. Datos iniciales de prueba (MOCK_PRODUCTS)
 INSERT INTO public.products (id, name, price_usd, category, is_active)
-VALUES 
+VALUES
     ('11111111-1111-1111-1111-111111111111', 'Hamburguesa Doble', 5.00, 'Comida', true),
     ('22222222-2222-2222-2222-222222222222', 'Perro Caliente', 2.50, 'Comida', true),
     ('33333333-3333-3333-3333-333333333333', 'Refresco', 1.50, 'Bebida', true)
+ON CONFLICT (id) DO NOTHING;
+
+-- 9.5. Tasa inicial
+INSERT INTO public.tasas (id, tasa)
+VALUES ('44444444-4444-4444-4444-444444444444', 280.00)
 ON CONFLICT (id) DO NOTHING;
