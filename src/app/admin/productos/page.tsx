@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Trash2, Edit, Plus, Power, PowerOff } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import sweetAlertHelper from "@/lib/sweet-alert-helper";
 
 export default function ProductosPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -31,13 +32,16 @@ export default function ProductosPage() {
   }, [loadProducts]);
 
   const handleDelete = async (id: string) => {
-    if (!confirm("¿Estás seguro de eliminar este producto?")) return;
+    const { isConfirmed } =
+      await sweetAlertHelper.confirmDelete("este producto");
+    if (!isConfirmed) return;
 
     const result = await deleteProduct(id);
     if (result.success) {
       loadProducts();
+      sweetAlertHelper.toastSuccess("Producto eliminado correctamente");
     } else {
-      alert(result.error);
+      sweetAlertHelper.error("Error", result.error);
     }
   };
 
@@ -45,8 +49,9 @@ export default function ProductosPage() {
     const result = await toggleProductActive(id, !isActive);
     if (result.success) {
       loadProducts();
+      sweetAlertHelper.toastSuccess("Estado actualizado correctamente");
     } else {
-      alert(result.error);
+      sweetAlertHelper.error("Error", result.error);
     }
   };
 
@@ -75,12 +80,12 @@ export default function ProductosPage() {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Productos</h1>
-        <Button onClick={handleCreate}>
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <div className="flex justify-between items-center mb-4 sm:mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold">Productos</h1>
+        <Button onClick={handleCreate} size="sm">
           <Plus className="w-4 h-4 mr-2" />
-          Nuevo Producto
+          <span className="hidden sm:inline">Nuevo Producto</span>
         </Button>
       </div>
 
@@ -231,7 +236,10 @@ function ProductForm({
       if (uploadResult.success && uploadResult.imageUrl) {
         imageUrl = uploadResult.imageUrl;
       } else {
-        alert(uploadResult.error || "Error al subir la imagen");
+        sweetAlertHelper.error(
+          "Error",
+          uploadResult.error || "Error al subir la imagen",
+        );
         setUploading(false);
         return;
       }
@@ -254,18 +262,23 @@ function ProductForm({
 
     if (result.success) {
       onClose();
+      sweetAlertHelper.toastSuccess(
+        product
+          ? "Producto actualizado correctamente"
+          : "Producto creado correctamente",
+      );
     } else {
-      alert(result.error);
+      sweetAlertHelper.error("Error", result.error);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-xl font-bold mb-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg p-4 sm:p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+        <h2 className="text-lg sm:text-xl font-bold mb-4">
           {product ? "Editar Producto" : "Nuevo Producto"}
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Nombre

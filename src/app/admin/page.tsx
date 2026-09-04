@@ -73,16 +73,21 @@ export default function AdminPage() {
   }
 
   return (
-    <div className="container mx-auto p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Reporte de Ventas - Hoy</h1>
-        <div className="flex gap-2">
-          <Button onClick={loadReport}>
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3">
+        <h1 className="text-2xl sm:text-3xl font-bold">
+          Reporte de Ventas - Hoy
+        </h1>
+        <div className="flex gap-2 w-full sm:w-auto">
+          <Button onClick={loadReport} className="flex-1 sm:flex-none">
             <RefreshCw className="w-4 h-4 mr-2" />
-            Actualizar
+            <span className="hidden sm:inline">Actualizar</span>
           </Button>
-          <Link href="/">
-            <Button variant="outline">Ir al POS</Button>
+          <Link href="/" className="flex-1 sm:flex-none">
+            <Button variant="outline" className="w-full">
+              <span className="hidden sm:inline">Ir al POS</span>
+              <span className="sm:hidden">POS</span>
+            </Button>
           </Link>
         </div>
       </div>
