@@ -36,21 +36,21 @@ export function ModuloPago({
   return (
     <div className="border-t pt-2 md:pt-3 flex flex-col gap-2 md:gap-3">
       {/* Cálculo de Totales */}
-      <Card className="bg-zinc-50 border-zinc-200">
+      <Card className="bg-gradient-to-br from-secondary/20 to-accent/10 border-secondary/30">
         <CardContent className="p-2 md:p-3 flex justify-between items-center">
           <div>
-            <p className="text-xs text-zinc-500 uppercase tracking-wider font-bold">
+            <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">
               Total Bs (Tasa: {MOCK_TASA})
             </p>
-            <p className="text-lg md:text-xl font-black text-zinc-700">
+            <p className="text-lg md:text-xl font-black text-foreground">
               Bs. {totalVES.toFixed(2)}
             </p>
           </div>
           <div className="text-right">
-            <p className="text-xs text-zinc-500 uppercase tracking-wider font-bold">
+            <p className="text-xs text-muted-foreground uppercase tracking-wider font-bold">
               Total USD
             </p>
-            <p className="text-xl md:text-2xl font-black text-green-600">
+            <p className="text-xl md:text-2xl font-black text-primary">
               ${totalUSD.toFixed(2)}
             </p>
           </div>
@@ -79,9 +79,9 @@ export function ModuloPago({
 
       {/* Bloque Numpad (Sólo visible si es Pago Móvil) */}
       {isPagoMovil && (
-        <div className="bg-zinc-50 p-2 rounded-lg border border-zinc-200">
+        <div className="bg-gradient-to-br from-secondary/10 to-accent/5 p-2 rounded-lg border border-secondary/30">
           <div className="flex justify-between items-center mb-2 px-1">
-            <span className="text-xs font-bold text-zinc-600">
+            <span className="text-xs font-bold text-muted-foreground">
               Ref. Pago Móvil (4 dígitos):
             </span>
             <div className="flex items-center gap-2">
@@ -138,7 +138,7 @@ export function ModuloPago({
       <Button
         onClick={handleRegisterSale}
         disabled={!canRegister}
-        className="w-full h-10 md:h-12 text-base md:text-lg bg-[#E2725B] hover:bg-[#D15A42] tracking-wide uppercase shadow-lg"
+        className="w-full h-10 md:h-12 text-base md:text-lg bg-primary hover:bg-primary/90 tracking-wide uppercase shadow-lg"
       >
         Registrar Venta
       </Button>

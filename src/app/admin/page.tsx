@@ -79,7 +79,10 @@ export default function AdminPage() {
           Reporte de Ventas - Hoy
         </h1>
         <div className="flex gap-2 w-full sm:w-auto">
-          <Button onClick={loadReport} className="flex-1 sm:flex-none">
+          <Button
+            onClick={loadReport}
+            className="flex-1 sm:flex-none bg-primary hover:bg-primary/90"
+          >
             <RefreshCw className="w-4 h-4 mr-2" />
             <span className="hidden sm:inline">Actualizar</span>
           </Button>
@@ -94,47 +97,57 @@ export default function AdminPage() {
 
       {/* Tarjetas de resumen */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card>
+        <Card className="bg-gradient-to-br from-chart-1/10 to-chart-1/5 border-chart-1/30">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total USD</CardTitle>
-            <DollarSign className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-foreground">
+              Total USD
+            </CardTitle>
+            <DollarSign className="h-4 w-4 text-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-foreground">
               ${report.totalUSD.toFixed(2)}
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-gradient-to-br from-chart-2/10 to-chart-2/5 border-chart-2/30">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total VES</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-foreground">
+              Total VES
+            </CardTitle>
+            <TrendingUp className="h-4 w-4 text-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-foreground">
               Bs. {report.totalVES.toFixed(2)}
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-gradient-to-br from-chart-3/10 to-chart-3/5 border-chart-3/30">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Ventas</CardTitle>
-            <ShoppingCart className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-foreground">
+              Ventas
+            </CardTitle>
+            <ShoppingCart className="h-4 w-4 text-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{report.salesCount}</div>
+            <div className="text-2xl font-bold text-foreground">
+              {report.salesCount}
+            </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-gradient-to-br from-chart-4/10 to-chart-4/5 border-chart-4/30">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Pago Móvil</CardTitle>
-            <Smartphone className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-foreground">
+              Pago Móvil
+            </CardTitle>
+            <Smartphone className="h-4 w-4 text-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-foreground">
               ${(report.paymentMethods["PAGO_MOVIL"] || 0).toFixed(2)}
             </div>
           </CardContent>
@@ -158,7 +171,9 @@ export default function AdminPage() {
                 </div>
               ))}
               {Object.keys(report.paymentMethods).length === 0 && (
-                <p className="text-sm text-gray-500">No hay ventas hoy</p>
+                <p className="text-sm text-muted-foreground">
+                  No hay ventas hoy
+                </p>
               )}
             </div>
           </CardContent>
@@ -179,14 +194,14 @@ export default function AdminPage() {
                       ${data.total.toFixed(2)}
                     </span>
                   </div>
-                  <div className="text-xs text-gray-500">
+                  <div className="text-xs text-muted-foreground">
                     {data.count} ítems vendidos
                   </div>
                   <div className="mt-2 space-y-1">
                     {data.items.map((item, idx) => (
                       <div
                         key={idx}
-                        className="flex justify-between text-xs text-gray-600"
+                        className="flex justify-between text-xs text-muted-foreground"
                       >
                         <span>{item.name}</span>
                         <span>
@@ -198,7 +213,9 @@ export default function AdminPage() {
                 </div>
               ))}
               {Object.keys(categoryData).length === 0 && (
-                <p className="text-sm text-gray-500">No hay ventas hoy</p>
+                <p className="text-sm text-muted-foreground">
+                  No hay ventas hoy
+                </p>
               )}
             </div>
           </CardContent>

@@ -46,7 +46,7 @@ export function Catalogo({ addToCart }: CatalogoProps) {
           onClick={() => addToCart(product)}
           variant="outline"
           disabled={!product.is_active}
-          className={`h-16 md:h-20 p-2 md:p-3 bg-white rounded-xl shadow-sm hover:border-primary active:scale-95 flex items-center gap-2 md:gap-3 text-left border ${
+          className={`h-16 md:h-20 p-2 md:p-3 bg-gradient-to-br from-white to-accent/10 rounded-xl shadow-sm hover:border-primary hover:bg-accent/20 active:scale-95 flex items-center gap-2 md:gap-3 text-left border ${
             !product.is_active ? "opacity-50 grayscale" : ""
           }`}
         >
@@ -58,10 +58,10 @@ export function Catalogo({ addToCart }: CatalogoProps) {
             />
           )}
           <div className="flex flex-col items-start justify-center flex-1 min-w-0">
-            <span className="font-bold text-xs md:text-sm leading-tight text-zinc-800 truncate">
+            <span className="font-bold text-xs md:text-sm leading-tight text-foreground truncate">
               {product.name}
             </span>
-            <span className="text-xs md:text-sm font-semibold text-zinc-500">
+            <span className="text-xs md:text-sm font-semibold text-primary">
               ${product.price_usd.toFixed(2)}
             </span>
           </div>
